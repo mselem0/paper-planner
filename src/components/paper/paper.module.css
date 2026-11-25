@@ -42,7 +42,7 @@
 .lineInput {
   flex: 1; min-width: 0; width: 100%; height: var(--lh, 34px);
   border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent;
-  padding: 0 2px; font-family: var(--font-hand); font-size: 22px; line-height: 1; color: var(--ink);
+  padding: 0 2px; font-family: var(--font-hand); font-size: 22px; line-height: 1; color: var(--ink); text-align: start;
   transition: border-color .15s, background-color .15s;
 }
 .lineInput::placeholder { color: color-mix(in srgb, var(--ink-soft) 55%, transparent); }

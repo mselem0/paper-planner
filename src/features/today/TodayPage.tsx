@@ -11,7 +11,7 @@ import { findCarryover } from '../../lib/carryover'
 import { BackupNudge } from './BackupNudge'
 import { GetReady } from './GetReady'
 import { useStore } from '../../store'
-import { DayTasks } from '../week/DayTasks'
+import { DayTasks, StatusLegend } from '../week/DayTasks'
 import { HabitDot, useHabitToggle, useHabits } from '../week/HabitTracker'
 import wk from '../week/week.module.css'
 import s from './today.module.css'
@@ -97,6 +97,7 @@ export function TodayPage() {
 
         <section className={s.card} aria-label="Today's tasks">
           <h2 className={s.h2}>Today&apos;s tasks</h2>
+          <StatusLegend />
           <DayTasks week={week} day={day} minRows={4} label={`${WEEKDAY_SHORT[day]} tasks`} />
         </section>
 

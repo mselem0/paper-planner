@@ -34,6 +34,7 @@ export const LineInput = forwardRef<HTMLInputElement, LineInputProps>(function L
       {bullet && <span className={s.bullet} aria-hidden />}
       <input
         ref={ref}
+        dir="auto"
         className={`${s.lineInput} ${className}`}
         value={value}
         onChange={(e) => onChange(e.target.value)}

@@ -7,7 +7,7 @@ import { monthInfo } from '../../lib/months'
 import { shiftWeek, weekAllOk, weekRangeTitle } from '../../lib/week'
 import { getWeek, useStore } from '../../store'
 import type { MatrixQuadrant } from '../../store/types'
-import { DayTasks, StatusGlyph } from './DayTasks'
+import { DayTasks, StatusLegend } from './DayTasks'
 import { HabitTracker } from './HabitTracker'
 import s from './week.module.css'
 
@@ -43,7 +43,8 @@ function Planner({ week }: { week: ISODate }) {
   const dates = weekDates(week)
   const today = todayISO()
   return (
-    <div className={s.panelInner}>
+    <div className={s.panelInner} data-testid="weekly-planner">
+      <StatusLegend />
       <div className={s.days}>
         {dates.map((iso, i) => (
           <div key={iso} className={`${s.dayRow} ${iso === today ? s.dayNow : ''}`}>
@@ -56,11 +57,6 @@ function Planner({ week }: { week: ISODate }) {
         ))}
       </div>
       <HabitTracker week={week} />
-      <div className={s.legend} aria-label="Status legend">
-        {(['ok', 'delay', 'stuck', 'cancel'] as const).map((k) => (
-          <span key={k}><span className={s.legendIcon}><StatusGlyph status={k} /></span>{k === 'ok' ? 'OK' : k.toUpperCase()}</span>
-        ))}
-      </div>
     </div>
   )
 }
