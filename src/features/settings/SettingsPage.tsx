@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { daysSince, readBackupMeta } from '../../lib/backup'
 import { PaperPage, ScriptTitle } from '../../components/paper'
 import { useStore } from '../../store'
@@ -91,6 +92,12 @@ export function SettingsPage() {
           <span style={{ width: `${Math.max(pct, 1)}%` }} />
         </div>
         <p className={s.note}>{human(bytes)} used of about 5 MB</p>
+      </section>
+
+      <section className={s.card}>
+        <h2 className={s.h2}>Paper planner</h2>
+        <p className={s.note}>Flip through the paper version and order it on WhatsApp.</p>
+        <Link to="/shop" className={`${s.btn} ${s.linkBtn}`}>Get the paper planner</Link>
       </section>
 
       <section className={`${s.card} ${s.danger}`}>

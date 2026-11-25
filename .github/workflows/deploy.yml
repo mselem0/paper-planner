@@ -28,6 +28,7 @@ jobs:
       - run: npm run build
         env:
           VITE_STATS_URL: ${{ vars.VITE_STATS_URL }}
+          VITE_WHATSAPP_NUMBER: ${{ vars.VITE_WHATSAPP_NUMBER }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

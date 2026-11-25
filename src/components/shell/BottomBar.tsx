@@ -50,6 +50,7 @@ export function BottomBar() {
                     <Link to="/" className={s.linkRow}>Cover</Link>
                     <NavLink to="/review" className={s.linkRow}>How was my year?</NavLink>
                     <NavLink to="/settings" className={s.linkRow}>Settings and backup</NavLink>
+                    <Link to="/shop" className={s.linkRow}>Get the paper planner</Link>
                   </div>
                 </>
               )}

@@ -13,6 +13,16 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,woff,woff2,json}'],
         navigateFallback: 'index.html',
         cleanupOutdatedCaches: true,
+        // Paper-planner preview images (webp, not precached): cached on first view so the preview also works offline.
+        runtimeCaching: [{
+          urlPattern: ({ url }: { url: URL }) => url.pathname.includes('/shop/'),
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'shop-images',
+            expiration: { maxEntries: 30, maxAgeSeconds: 60 * 60 * 24 * 60 },
+            cacheableResponse: { statuses: [0, 200] },
+          },
+        }],
       },
       manifest: {
         name: 'Rodaina Planner 2027',

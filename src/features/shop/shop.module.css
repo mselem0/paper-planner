@@ -1,0 +1,116 @@
+/* "Get the paper planner" preview. 3D is confined to .book (its own stacking context); nothing above it has a transform. */
+.shop {
+  --bh: max(300px, min(64vh, 760px, calc(100vh - 372px)));
+  --bw: calc(var(--bh) * 780 / 1548);
+  position: relative; min-height: 100vh; background: var(--paper); font-family: var(--font-body); color: var(--ink);
+}
+@supports (height: 1dvh) {
+  .shop { --bh: max(300px, min(64dvh, 760px, calc(100dvh - 372px))); min-height: 100dvh; }
+}
+.content {
+  position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 10px 14px calc(104px + env(safe-area-inset-bottom)); overflow-x: hidden; overflow-x: clip;
+}
+
+.top { width: min(560px, 100%); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; min-height: 40px; }
+.backLink {
+  justify-self: start; border: 0; background: none; color: var(--blue-deep); font: 800 15px var(--font-body); text-decoration: none; padding: 8px 4px;
+}
+.topSpacer { display: block; }
+.h1 { margin: 0; font: 400 22px var(--font-display); color: var(--blue); letter-spacing: .01em; }
+.h1 em { font: 700 28px var(--font-hand); color: var(--red); font-style: normal; }
+
+/* ---- book ---- */
+.bookArea { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
+.book {
+  position: relative; isolation: isolate; width: var(--bw); height: var(--bh); margin: 6px 0 4px; perspective: 2400px;
+  touch-action: pan-y; user-select: none; -webkit-user-select: none; direction: ltr;
+  box-shadow: 0 22px 36px -16px rgba(40, 30, 10, .45); border-radius: 4px 12px 12px 4px; cursor: grab;
+}
+.book:active { cursor: grabbing; }
+.spine { position: absolute; left: -5px; top: 2px; bottom: 2px; width: 9px; border-radius: 3px 0 0 3px; background: linear-gradient(90deg, #1f2a52, var(--blue-deep)); }
+.rings { position: absolute; left: -9px; top: 6%; bottom: 6%; width: 18px; display: flex; flex-direction: column; justify-content: space-between; z-index: 50; pointer-events: none; }
+.rings i { height: 12px; border-radius: 8px; background: linear-gradient(#f4f4f4, #8a8f9c); box-shadow: 0 2px 3px rgba(0, 0, 0, .4); }
+.leaf { position: absolute; inset: 0; transform-origin: left center; transform: rotateY(calc(var(--p, 0) * -180deg)); transform-style: preserve-3d; }
+.face {
+  position: absolute; inset: 0; overflow: hidden; background: var(--paper); border-radius: 4px 12px 12px 4px;
+  -webkit-backface-visibility: hidden; backface-visibility: hidden; opacity: var(--o, 1);
+}
+.face img { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.face::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(0, 0, 0, .22), rgba(0, 0, 0, 0) 7%, rgba(0, 0, 0, 0) 94%, rgba(0, 0, 0, .08)); }
+.back { transform: rotateY(180deg); border-radius: 12px 4px 4px 12px; background: #f6f4e2; }
+.back img { transform: scaleX(-1); opacity: .07; }
+.back::after { background: linear-gradient(270deg, rgba(0, 0, 0, .22), rgba(0, 0, 0, 0) 7%, rgba(0, 0, 0, 0) 94%, rgba(0, 0, 0, .08)); }
+.shade { position: absolute; inset: 0; z-index: 1; background: #000; opacity: calc(var(--sh, 0) * .35); pointer-events: none; }
+/* prefers-reduced-motion: no rotateY, just cross-fade the leaves */
+.flat { perspective: none; }
+.flat .leaf { transform: none; transform-style: flat; }
+.flat .back { display: none; }
+.flat .face { border-radius: 4px 12px 12px 4px; }
+
+/* ---- label, note, controls ---- */
+.label { min-height: 34px; text-align: center; font: 800 24px/1.3 var(--font-body); color: var(--red); }
+.illus {
+  max-width: min(92vw, 420px); text-align: center; font-size: 13px; line-height: 1.55; font-weight: 800; color: #6b4b00;
+  background: #fff3cd; border: 1.5px solid #e6c766; border-radius: 10px; padding: 6px 12px; margin: 0;
+}
+.nav { display: flex; align-items: center; gap: 10px; direction: ltr; margin-top: 6px; }
+.navBtn {
+  width: 46px; height: 46px; flex: none; border-radius: 50%; border: 0; background: #fff; color: var(--blue-deep);
+  box-shadow: 0 4px 0 rgba(30, 40, 90, .25); display: grid; place-items: center; padding: 0;
+}
+.navBtn svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.navBtn:disabled { opacity: .35; cursor: default; }
+.dots { display: flex; }
+.dotBtn { border: 0; background: none; padding: 9px 4px; display: grid; place-items: center; }
+.dotBtn i { display: block; width: 9px; height: 9px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 1px rgba(62, 89, 157, .35); transition: transform .25s, background-color .25s; }
+.dotBtn i.on { background: var(--blue-deep); transform: scale(1.35); box-shadow: none; }
+.credits { display: flex; flex-direction: column; align-items: center; gap: 1px; margin-top: 14px; font-size: 12px; color: var(--ink-soft); font-weight: 700; }
+
+/* ---- buy bar ---- */
+.bar {
+  position: fixed; inset-inline: 0; bottom: 0; z-index: 6; display: flex; justify-content: center;
+  padding: 18px 16px calc(12px + env(safe-area-inset-bottom)); background: linear-gradient(rgba(254, 254, 246, 0), var(--paper) 55%); pointer-events: none;
+}
+.buy {
+  pointer-events: auto; display: flex; gap: 10px; align-items: center; border: 0; border-radius: 999px; padding: 15px 36px;
+  background: var(--blue-deep); color: #fff; font: 800 18px var(--font-body); box-shadow: var(--shadow-press);
+  transition: transform .14s var(--ease-bounce), box-shadow .14s;
+}
+.buy svg { fill: #fff; }
+.buy:active { transform: translateY(4px); box-shadow: 0 0 0 rgba(30, 40, 90, .35), 0 3px 8px -4px rgba(30, 40, 90, .5); }
+
+/* ---- bottom sheet ---- */
+.backdrop {
+  position: fixed; inset: 0; z-index: 20; display: flex; align-items: flex-end; justify-content: center;
+  background: rgba(30, 35, 70, .55);
+}
+.sheet {
+  position: relative; width: min(520px, 100%); max-height: 94vh; max-height: 94dvh; overflow-y: auto; background: var(--paper); outline: none;
+  border-radius: 26px 26px 0 0; padding: 22px 22px calc(22px + env(safe-area-inset-bottom)); box-shadow: 0 -10px 40px rgba(0, 0, 0, .35);
+  animation: sheetUp .35s cubic-bezier(.2, .9, .3, 1.1);
+}
+@keyframes sheetUp { from { transform: translateY(60px); opacity: 0; } }
+@media (min-width: 700px) { .backdrop { align-items: center; } .sheet { border-radius: 26px; } }
+.close { position: absolute; top: 8px; inset-inline-start: 12px; width: 44px; height: 44px; border: 0; background: none; font-size: 30px; line-height: 1; color: var(--ink); }
+.sheetHead { display: flex; gap: 14px; align-items: center; padding-top: 22px; }
+.mini { width: 78px; height: auto; aspect-ratio: 780 / 1548; border-radius: 6px; object-fit: cover; box-shadow: 0 8px 16px -6px rgba(0, 0, 0, .4); transform: rotate(-4deg); flex: none; }
+.sheetTitle { margin: 0; font: 400 26px var(--font-display); color: var(--blue-deep); }
+.sheetTitle em { font: 700 34px var(--font-hand); color: var(--red); font-style: normal; }
+.sheetText { margin: 8px 0 0; font-size: 15px; line-height: 1.7; }
+.fieldLabel { display: block; font-weight: 800; font-size: 13px; margin: 14px 0 5px; }
+.input {
+  display: block; width: 100%; border: 2px solid var(--line); border-radius: 12px; padding: 11px 12px; background: #fff; color: var(--ink);
+  font: 600 16px var(--font-body); resize: none;
+}
+.input:focus { outline: none; border-color: var(--blue); }
+.go {
+  margin-top: 16px; width: 100%; border: 0; border-radius: 999px; background: #25d366; color: #073b1c; font: 800 18px var(--font-body); padding: 15px;
+  box-shadow: 0 5px 0 rgba(7, 59, 28, .35); display: flex; gap: 10px; justify-content: center; align-items: center; text-decoration: none;
+}
+.go svg { fill: #073b1c; }
+.go:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(7, 59, 28, .35); }
+.go:disabled { background: #b8c9bf; color: #3d5246; box-shadow: none; cursor: not-allowed; }
+.warn { margin: 10px 0 0; padding: 10px 12px; border-radius: 10px; background: #fff3cd; color: #6b4b00; font-size: 13px; font-weight: 700; }
+.sheetNote { margin: 10px 0 0; font-size: 12.5px; line-height: 1.6; color: var(--ink-soft); text-align: center; }
+.sheetNoteWarn { color: #6b4b00; font-weight: 700; }

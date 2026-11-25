@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { Shell } from '../components/shell/Shell'
 import { Toaster } from '../components/shell/Toaster'
@@ -9,11 +10,15 @@ import {
   MonthRoute, NotFound, NoteRoute, NotesRoute, QuarterRoute, ReviewRoute, SettingsRoute, TodayRoute, WeekRoute,
 } from '../routes/placeholders'
 
+// Loaded on demand so the paper-planner preview stays out of the main planner bundle.
+const ShopPage = lazy(() => import('../features/shop/ShopPage').then((m) => ({ default: m.ShopPage })))
+
 export function App() {
   return (
     <HashRouter>
       <Routes>
         <Route path="/" element={<CoverPage />} />
+        <Route path="/shop" element={<Suspense fallback={null}><ShopPage /></Suspense>} />
         <Route element={<Shell />}>
           <Route path="/year" element={<YearPage />} />
           <Route path="/today" element={<TodayRoute />} />
