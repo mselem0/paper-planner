@@ -4,3 +4,6 @@ dist
 .playwright-mcp/
 *.tsbuildinfo
 .DS_Store
+__pycache__/
+*.pyc
+.venv/
