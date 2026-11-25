@@ -5,7 +5,7 @@ import { celebrate } from '../../lib/confetti'
 import { weekMonth } from '../../lib/dates'
 import { wouldCompleteHabit } from '../../lib/week'
 import { getWeek, resolveHabits, useStore } from '../../store'
-import { BigTitle, Stamp } from '../../components/paper'
+import { AutoTextarea, BigTitle, Stamp } from '../../components/paper'
 import s from './week.module.css'
 
 export function HabitDot({ on, onClick, label, highlight }: { on: boolean; onClick: () => void; label: string; highlight?: boolean }) {
@@ -46,12 +46,15 @@ export function HabitTracker({ week }: { week: ISODate }) {
         <span className={s.stampPos}><Stamp rotate={12}>TRACKER</Stamp></span>
       </div>
       <div className={s.habitGrid}>
-        <span />
-        {WEEKDAY_LETTERS.map((l, i) => <span key={i} className={s.habitHead} aria-hidden>{l}</span>)}
+        <div className={s.habitHeadRow} aria-hidden>
+          <span className={s.habitHeadGap} />
+          {WEEKDAY_LETTERS.map((l, i) => <span key={i} className={s.habitHead}>{l}</span>)}
+        </div>
         {habits.map((h, i) => (
           <HabitRow key={i}>
-            <input
-              className={s.habitName} value={h.name} onChange={(e) => setName(week, i, e.target.value)}
+            <AutoTextarea
+              className={s.habitName} value={h.name} onChange={(v) => setName(week, i, v)}
+              onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault() }}
               aria-label={`Habit ${i + 1} name`} placeholder={`habit ${i + 1}`} autoComplete="off"
             />
             {h.done.map((on, d) => (

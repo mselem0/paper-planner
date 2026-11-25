@@ -1,6 +1,7 @@
 export { PaperPage } from './PaperPage'
 export { RuledLines } from './RuledLines'
 export { LineInput } from './LineInput'
+export { AutoTextarea } from './AutoTextarea'
 export { LineList } from './LineList'
 export { BigTitle } from './BigTitle'
 export { ScriptTitle } from './ScriptTitle'
