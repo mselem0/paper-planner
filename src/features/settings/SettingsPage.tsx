@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { daysSince, readBackupMeta } from '../../lib/backup'
 import { PaperPage, ScriptTitle } from '../../components/paper'
 import { useStore } from '../../store'
+import { statsEnabled, updateStats, useStatsState } from '../stats/StatsPinger'
 import { STORAGE_KEY } from '../../store/defaults'
 import { normalizeData } from '../../store/normalize'
 import { plannerStorage } from '../../store/storage'
@@ -25,6 +26,7 @@ export function SettingsPage() {
   const data = useStore((st) => st.weeks)
   const file = useRef<HTMLInputElement>(null)
   const [bytes, setBytes] = useState(0)
+  const stats = useStatsState()
   const last = readBackupMeta().lastBackupAt
   useEffect(() => { const t = setTimeout(() => setBytes(usedBytes()), 400); return () => clearTimeout(t) })
 
@@ -62,6 +64,15 @@ export function SettingsPage() {
           <input value={currency} onChange={(e) => setCurrency(e.target.value)} placeholder="EGP" maxLength={8} autoComplete="off" />
         </label>
       </section>
+
+      {statsEnabled() && (
+        <section className={s.card}>
+          <h2 className={s.h2}>Privacy</h2>
+          <p className={s.note}>The planner sends a tiny note once a day: an anonymous device id, the day you opened it, whether it is installed on your home screen, and your name if you allow it. Never your tasks, budget or notes.</p>
+          <label className={s.check}><input type="checkbox" checked={stats.shareName} disabled={stats.optOut} onChange={(e) => updateStats({ shareName: e.target.checked })} /> Share my name</label>
+          <label className={s.check}><input type="checkbox" checked={!stats.optOut} onChange={(e) => updateStats({ optOut: !e.target.checked })} /> Send anonymous usage stats</label>
+        </section>
+      )}
 
       <section className={s.card}>
         <h2 className={s.h2}>Backup</h2>

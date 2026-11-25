@@ -4,6 +4,7 @@ import { useId, useRef, type KeyboardEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Sticker, WavyStripes } from '../../components/paper'
 import { useStore } from '../../store'
+import { statsEnabled, updateStats, useStatsState } from '../stats/StatsPinger'
 import s from './cover.module.css'
 
 export function CoverPage() {
@@ -13,6 +14,8 @@ export function CoverPage() {
   const id = useId()
   const star = useRef<HTMLButtonElement>(null)
   const trimmed = name.trim()
+  const stats = useStatsState()
+  const consentId = useId()
 
   const open = () => navigate('/today')
   const onKey = (e: KeyboardEvent<HTMLInputElement>) => { if (e.key === 'Enter') open() }
@@ -44,6 +47,12 @@ export function CoverPage() {
             <Sticker size={96} rotate={10} />
           </motion.button>
         </div>
+        {statsEnabled() && (
+          <label htmlFor={consentId} className={s.consent}>
+            <input id={consentId} type="checkbox" checked={stats.shareName} onChange={(e) => updateStats({ shareName: e.target.checked })} />
+            Let the planner's creator see my name
+          </label>
+        )}
         {trimmed ? (
           <>
             <div className={s.greeting}>Welcome back, {trimmed}!</div>

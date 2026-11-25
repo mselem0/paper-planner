@@ -1,6 +1,7 @@
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { Shell } from '../components/shell/Shell'
 import { Toaster } from '../components/shell/Toaster'
+import { StatsPinger } from '../features/stats/StatsPinger'
 import { InstallPrompt } from '../features/install/InstallPrompt'
 import { CoverPage } from '../features/cover/CoverPage'
 import { YearPage } from '../features/year/YearPage'
@@ -29,6 +30,7 @@ export function App() {
       </Routes>
       <Toaster />
       <InstallPrompt />
+      <StatsPinger />
     </HashRouter>
   )
 }

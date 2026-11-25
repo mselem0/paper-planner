@@ -26,3 +26,5 @@
 .open:active { transform: translateY(4px); box-shadow: 0 0 0 rgba(30, 40, 90, .35), 0 3px 8px -4px rgba(30, 40, 90, .5); }
 .hint { font-size: 13px; color: var(--ink-soft); }
 @media (max-width: 420px) { .label { padding: 22px 20px 30px; } .starWrap { right: -12px; bottom: -26px; } }
+.consent { display: flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-hand); font-size: 20px; color: var(--ink-soft); margin-top: -8px; }
+.consent input { width: 18px; height: 18px; accent-color: var(--blue); }
