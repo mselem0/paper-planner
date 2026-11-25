@@ -1,7 +1,13 @@
 /**
- * Rodaina Planner usage stats. Bound to a Google Sheet; deploy as a Web app (Execute as: Me, Access: Anyone).
+ * Paper Planner usage stats. Deploy as a Web app (Execute as: Me, Access: Anyone).
  * Receives one small JSON ping per device per day. Never receives planner content.
+ *
+ * Works either way:
+ *  - bound to the Sheet (created from the Sheet via Extensions > Apps Script): leave SHEET_ID empty, or
+ *  - standalone (created at script.google.com): set SHEET_ID to the ID in the Sheet's URL,
+ *    https://docs.google.com/spreadsheets/d/<SHEET_ID>/edit
  */
+var SHEET_ID = '';
 var USER_HEADERS = ['deviceId', 'name', 'firstSeen', 'lastSeen', 'daysUsed', 'installed', 'platform', 'lang'];
 var DAY_RE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -13,7 +19,7 @@ function doPost(e) {
   var lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var ss = book_();
     var users = sheet_(ss, 'Users', USER_HEADERS);
     var daily = sheet_(ss, 'Daily', ['day', 'deviceId']);
     ensureSummary_(ss);
@@ -43,6 +49,13 @@ function doPost(e) {
     lock.releaseLock();
   }
   return ContentService.createTextOutput('ok');
+}
+
+function book_() {
+  if (SHEET_ID) return SpreadsheetApp.openById(SHEET_ID);
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  if (!ss) throw new Error('No spreadsheet: this script is not bound to a Sheet. Set SHEET_ID at the top of the file.');
+  return ss;
 }
 
 function parse_(e) {
@@ -92,7 +105,7 @@ function ensureSummary_(ss) {
   if (ss.getSheetByName('Summary')) return;
   var s = ss.insertSheet('Summary', 0);
   var tz = 'yyyy-mm-dd';
-  s.getRange('A1:B1').setValues([['Rodaina Planner usage', '']]).setFontWeight('bold');
+  s.getRange('A1:B1').setValues([['Paper Planner usage', '']]).setFontWeight('bold');
   s.getRange('A3:A7').setValues([['Total users'], ['Installed to home screen'], ['Active today'], ['Active last 7 days (unique devices)'], ['Average days used per user']]);
   s.getRange('B3').setFormula('=COUNTA(Users!A2:A)');
   s.getRange('B4').setFormula('=COUNTIF(Users!F2:F,TRUE)');
@@ -106,4 +119,13 @@ function ensureSummary_(ss) {
     s.getRange(r, 2).setFormula('=COUNTIF(Daily!A$2:A,A' + r + ')');
   }
   s.setColumnWidth(1, 280);
+}
+
+// Run once from the Apps Script editor (select testPing, click Run) to authorize the script and check
+// that the Summary, Users and Daily tabs appear. Delete the "Test User" rows afterwards.
+function testPing() {
+  doPost({ postData: { contents: JSON.stringify({
+    v: 1, deviceId: 'test-device', day: Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd'),
+    name: 'Test User', installed: false, platform: 'other', lang: 'en'
+  }) } });
 }
