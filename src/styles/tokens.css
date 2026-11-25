@@ -1,0 +1,40 @@
+/* Design tokens - colours sampled from the 2027 planner PDF. Keep in sync with src/lib/months.ts */
+:root {
+  --paper: #fefef6;
+  --paper-edge: #f1efd9;
+  --ink: #2f3a63;
+  --ink-soft: #6b7599;
+  --blue: #5b78bd;
+  --blue-deep: #3e599d;
+  --blue-tint: #dee7f4;      /* cover label / legend bar */
+  --red: #c0262d;            /* script "AGENDA", sticker */
+  --red-bright: #e42321;
+  --line: #b4c0e2;           /* ruled lines */
+  --line-soft: #d9dff1;
+
+  /* month tile colours (year agenda) and accents (calendar giant name, header bar, weekly headings) */
+  --m1-tile: #dde6f3;  --m1-accent: #cecc64;
+  --m2-tile: #e6d2e2;  --m2-accent: #5d79ba;
+  --m3-tile: #f6efab;  --m3-accent: #897fba;
+  --m4-tile: #f6bdb6;  --m4-accent: #c11718;
+  --m5-tile: #e2d1e7;  --m5-accent: #f28f2f;
+  --m6-tile: #efd9af;  --m6-accent: #c972a3;
+  --m7-tile: #fdd5a7;  --m7-accent: #3e599d;
+  --m8-tile: #dbead5;  --m8-accent: #158370;
+  --m9-tile: #faebeb;  --m9-accent: #c55f3d;
+  --m10-tile: #f7f0ac; --m10-accent: #7caddd;
+  --m11-tile: #d2eae9; --m11-accent: #f5f3d0;
+  --m12-tile: #fdd5a8; --m12-accent: #158370;
+
+  --font-display: 'Archivo Black', 'Arial Black', Impact, sans-serif;
+  --font-hand: 'Caveat', 'Bradley Hand', cursive;
+  --font-body: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-ar: 'Amiri Quran', 'Traditional Arabic', serif;
+
+  --radius: 14px;
+  --shadow-page: 0 1px 0 #fff inset, 0 2px 4px rgba(60, 50, 20, .08), 0 14px 34px -10px rgba(60, 50, 20, .28);
+  --shadow-press: 0 4px 0 rgba(30, 40, 90, .35), 0 10px 18px -6px rgba(30, 40, 90, .35);
+  --ease-bounce: cubic-bezier(.34, 1.56, .64, 1);
+  --rail-w: 232px;
+  --bar-h: 64px;
+}

@@ -1,0 +1,15 @@
+.h1 { font-family: var(--font-display); color: var(--blue); font-size: clamp(40px, 9vw, 72px); line-height: 1; text-transform: uppercase; }
+.card { margin-top: 18px; padding: 14px 16px; background: #fff; border: 2px dashed var(--line); border-radius: 14px; display: flex; flex-direction: column; gap: 10px; }
+.h2 { font-family: var(--font-display); color: var(--blue); font-size: 18px; }
+.field { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-family: var(--font-hand); font-size: 22px; }
+.field span { width: 90px; }
+.field input { flex: 1; min-width: 0; height: 38px; border: 0; border-bottom: 1px solid var(--line); background: transparent; font-family: var(--font-hand); font-size: 24px; }
+.field input:focus { outline: none; border-bottom-color: var(--blue); background: color-mix(in srgb, var(--blue) 7%, transparent); }
+.note { font-family: var(--font-hand); font-size: 20px; color: var(--ink-soft); }
+.btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn { border: 0; padding: 10px 18px; border-radius: 999px; background: var(--blue); color: #fff; font-weight: 800; box-shadow: var(--shadow-press); }
+.btn:active { transform: translateY(3px); }
+.red { background: var(--red); align-self: flex-start; }
+.danger { border-color: var(--red); }
+.meter { height: 14px; border-radius: 999px; background: var(--blue-tint); overflow: hidden; }
+.meter span { display: block; height: 100%; background: var(--blue); border-radius: inherit; }

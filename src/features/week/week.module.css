@@ -1,0 +1,78 @@
+.root.root.root { max-width: 1040px; }
+@media (min-width: 1200px) { .root.root.root { max-width: min(1500px, 100%); } }
+.wrap { display: flex; flex-direction: column; gap: 14px; --accent-ink: var(--ink-m); }
+.head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.year { font-family: var(--font-display); font-size: clamp(20px, 4vw, 30px); color: var(--blue); }
+.titleRow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.title { font-family: var(--font-hand); font-size: clamp(30px, 6vw, 46px); color: var(--ink); line-height: 1; flex: 0 1 auto; }
+.arrow { border: 0; background: var(--blue-tint); width: 36px; height: 36px; border-radius: 50%; font-size: 24px; line-height: 1; color: var(--ink); }
+.arrow:disabled { opacity: .3; cursor: default; }
+.monthLink { margin-left: auto; color: var(--ink); text-decoration: none; font-family: var(--font-display); font-size: 13px; padding: 8px 14px; border-radius: 999px; }
+.tabs { display: flex; gap: 4px; }
+.tab { border: 0; padding: 8px 16px; border-radius: 10px 10px 0 0; background: var(--blue-tint); color: var(--ink-soft); font-weight: 800; font-size: 14px; }
+.tabOn { background: var(--accent); color: #fff; }
+.spread { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+.panel { display: none; }
+.panelOn { display: block; }
+@media (min-width: 1200px) {
+  .tabs { display: none; }
+  .spread { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 44px; }
+  .panel { display: block; }
+}
+.panelInner { display: flex; flex-direction: column; gap: 10px; }
+
+/* matrix */
+.quads { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent); }
+.quad { padding: 10px 12px 12px; min-width: 0; border: 0 solid color-mix(in srgb, var(--accent) 55%, transparent); }
+.quad:nth-child(odd) { border-right-width: 1px; }
+.quad:nth-child(-n+2) { border-bottom-width: 1px; }
+.quadLabel { font-family: var(--font-hand); font-weight: 400; font-size: 21px; color: var(--ink-m); margin-bottom: 4px; }
+.quad input { font-size: 19px; }
+.notesTitle { align-self: flex-start; margin-top: 8px; }
+@media (max-width: 600px) {
+  .quads { grid-template-columns: 1fr; }
+  .quad:nth-child(odd) { border-right-width: 0; }
+  .quad:not(:last-child) { border-bottom-width: 1px; }
+}
+
+/* planner */
+.days { border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.dayRow { display: grid; grid-template-columns: 62px minmax(0, 1fr); border-bottom: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.dayRow:last-child { border-bottom: 0; }
+.dayNow { background: color-mix(in srgb, var(--accent) 9%, transparent); }
+.dayLabel { border-right: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line)); padding: 6px 6px; font-family: var(--font-hand); font-size: 22px; color: var(--ink-m); display: flex; flex-direction: column; line-height: 1; }
+.dayLabel small { font-family: var(--font-display); font-size: 13px; margin-top: 4px; color: var(--blue); }
+.tasks { padding: 4px 8px 6px 10px; }
+.task { --lh: 32px; display: flex; align-items: center; height: var(--lh); gap: 8px; }
+.dot { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+.taskInput { flex: 1; min-width: 0; height: var(--lh); border: 0; border-bottom: 1px solid var(--line); background: transparent; border-radius: 0; font-family: var(--font-hand); font-size: 21px; padding: 0 2px; color: var(--ink); }
+.taskInput:focus { outline: none; border-bottom-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.cancelled .taskInput { text-decoration: line-through; opacity: .45; }
+.done .taskInput { color: var(--ink-soft); }
+.status { flex: none; width: 28px; height: 28px; border-radius: 50%; border: 0; background: transparent; padding: 0; color: var(--ink-soft); display: grid; place-items: center; }
+.statusEmpty { opacity: .45; cursor: help; }
+.statusEmpty:hover { opacity: .7; }
+.status:not(.statusEmpty):hover { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+.glyph { display: grid; place-items: center; }
+.st_ok { color: #2f8f5b; } .st_delay { color: #c97a1a; } .st_stuck { color: #b8501f; } .st_cancel { color: var(--red); }
+.moveBtn { flex: none; border: 0; background: var(--blue-tint); color: var(--ink); border-radius: 999px; padding: 2px 9px; font-size: 12px; font-weight: 800; white-space: nowrap; }
+.moveBtn:hover { background: var(--blue); color: #fff; }
+
+/* habits */
+.habits { margin-top: 10px; padding: 8px 4px 0; }
+.habitTitle { position: relative; display: inline-block; }
+.stampPos { position: absolute; right: -34px; bottom: -6px; }
+.habitGrid { margin-top: 12px; display: grid; grid-template-columns: minmax(80px, 1.3fr) repeat(7, minmax(0, 1fr)); align-items: center; gap: 8px 6px; }
+.habitHead { text-align: center; font-family: var(--font-display); font-size: 11px; color: var(--ink-soft); }
+.habitRow { display: contents; }
+.habitName { min-width: 0; height: 34px; border: 0; border-bottom: 1px solid var(--line); background: transparent; border-radius: 0; font-family: var(--font-hand); font-size: 20px; color: var(--ink); }
+.habitName:focus { outline: none; border-bottom-color: var(--accent); }
+.hdot { justify-self: center; width: min(100%, 38px); aspect-ratio: 1; border-radius: 50%; border: 2px solid color-mix(in srgb, var(--accent) 60%, transparent); background: color-mix(in srgb, var(--accent) 12%, transparent); padding: 0; display: grid; place-items: center; transition: background-color .15s, border-color .15s; }
+.hdotOn { background: var(--accent); border-color: var(--accent); }
+.hdotNow { box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--accent); }
+.hdotInner { display: grid; place-items: center; width: 100%; height: 100%; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 22px; align-items: center; background: var(--blue-tint); border-radius: 6px; padding: 7px 12px; font-size: 12px; font-weight: 800; letter-spacing: .08em; color: var(--ink); margin-top: 8px; }
+.legend > span { display: inline-flex; align-items: center; gap: 6px; }
+.legendIcon { display: inline-grid; place-items: center; width: 18px; height: 18px; color: var(--ink-m); }
+.legendIcon svg { width: 18px; height: 18px; }

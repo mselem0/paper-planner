@@ -1,0 +1,10 @@
+.title { display: flex; flex-direction: column; margin: 0 0 22px; font-family: var(--font-hand); font-weight: 700; color: var(--red); font-size: clamp(44px, 10vw, 84px); line-height: .95; transform: rotate(-3deg); transform-origin: left center; }
+.box { --line: #b4c0e2; margin: 0; min-width: 0; border: 2px solid #9db1dc; border-radius: 14px; padding: 4px 14px 12px; }
+.legend { padding: 0 8px; font-family: var(--font-display); font-size: 13px; letter-spacing: .04em; color: var(--blue); max-width: 100%; overflow-wrap: anywhere; }
+.full { margin-bottom: 20px; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 18px; }
+.fill { background: #dde6f3; border-color: #dde6f3; }
+.fill .legend { background: transparent; }
+.red { border-color: var(--red); }
+.red .legend { color: var(--red); font-family: var(--font-hand); font-weight: 700; font-size: 24px; letter-spacing: 0; }
+@media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }

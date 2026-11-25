@@ -1,0 +1,31 @@
+.head { position: relative; padding: 0 0 14px; min-height: clamp(84px, 16vw, 120px); }
+.year { display: block; }
+.agenda { position: absolute; left: clamp(10px, 4vw, 40px); top: 38%; z-index: 1; }
+.sub { position: absolute; right: 0; top: 6px; max-width: 24ch; text-align: right; color: var(--ink-soft); font-size: 14px; font-weight: 600; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; max-width: min(100%, 880px); margin: 0 auto; background: var(--paper); border-radius: 4px; }
+.tile {
+  --tc: var(--tile); position: relative; background: var(--tc); aspect-ratio: 1.2 / 1; display: flex; flex-direction: column;
+  transition: transform .25s var(--ease-bounce), box-shadow .25s; z-index: 0;
+}
+.tile:hover, .tile:focus-within { transform: translateY(-3px) rotate(-.4deg); box-shadow: 0 14px 24px -12px rgba(60, 50, 20, .45); z-index: 2; }
+.tile:focus-within { outline: 3px solid var(--ink); outline-offset: -3px; }
+.text {
+  flex: 1; width: 100%; min-height: 0; resize: none; border: 0; background: transparent; padding: 12px 12px 34px; border-radius: 0;
+  font-family: var(--font-hand); font-size: 19px; line-height: 1.25; color: var(--ink);
+}
+.text:focus { outline: none; }
+.text::placeholder { color: color-mix(in srgb, var(--ink) 30%, transparent); }
+.label { position: absolute; right: 10px; bottom: 7px; font-family: var(--font-display); font-size: 13px; letter-spacing: .04em; pointer-events: none; }
+.open {
+  position: absolute; top: 7px; right: 7px; width: 30px; height: 30px; border-radius: 50%; border: 0; display: grid; place-items: center;
+  background: rgba(255, 255, 255, .7); color: var(--ink); text-decoration: none; opacity: 0; transform: scale(.7) rotate(-20deg);
+  transition: opacity .2s, transform .25s var(--ease-bounce), background-color .2s;
+}
+.tile:hover .open, .tile:focus-within .open, .open:focus-visible { opacity: 1; transform: none; }
+.open:hover { background: #fff; transform: scale(1.12); }
+@media (hover: none) { .open { opacity: .85; transform: none; } }
+@media (max-width: 560px) {
+  .grid { grid-template-columns: repeat(2, 1fr); aspect-ratio: auto; }
+  .sub { display: none; }
+  .text { font-size: 20px; }
+}
