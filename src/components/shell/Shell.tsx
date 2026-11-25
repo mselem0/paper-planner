@@ -17,8 +17,8 @@ export function Shell() {
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={pathname}
-            initial={{ opacity: 0, x: 28, rotateY: -5, transformOrigin: 'left center' }}
-            animate={{ opacity: 1, x: 0, rotateY: 0, transition: { duration: 0.32, ease: [0.22, 1, 0.36, 1] } }}
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0, transition: { duration: 0.32, ease: [0.22, 1, 0.36, 1] } }}
             exit={{ opacity: 0, x: -18, transition: { duration: 0.14 } }}
           >
             {outlet}

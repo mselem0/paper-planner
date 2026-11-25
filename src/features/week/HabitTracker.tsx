@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { motion } from 'framer-motion'
 import { WEEKDAY_LETTERS, type ISODate } from '../../lib/dates'
 import { celebrate } from '../../lib/confetti'
 import { weekMonth } from '../../lib/dates'
@@ -11,9 +10,9 @@ import s from './week.module.css'
 export function HabitDot({ on, onClick, label, highlight }: { on: boolean; onClick: () => void; label: string; highlight?: boolean }) {
   return (
     <button type="button" className={`${s.hdot} ${on ? s.hdotOn : ''} ${highlight ? s.hdotNow : ''}`} onClick={onClick} aria-pressed={on} aria-label={label}>
-      <motion.span key={on ? 'on' : 'off'} className={s.hdotInner} initial={{ scale: on ? 0.3 : 1 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 600, damping: 10 }}>
+      <span className={s.hdotInner} aria-hidden>
         {on && <svg viewBox="0 0 20 20" width="62%" height="62%" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 10.5l3.5 3.5 7.5-8" /></svg>}
-      </motion.span>
+      </span>
     </button>
   )
 }
