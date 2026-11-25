@@ -26,7 +26,7 @@ export function createDebouncedStorage(delay = 250, backing: () => Storage = () 
   const flush = () => {
     if (timer) { clearTimeout(timer); timer = null }
     for (const [k, v] of [...pending]) {
-      try { backing().setItem(k, v); pending.delete(k) } catch (e) { pending.delete(k); reportError(e) }
+      try { backing().setItem(k, v); pending.delete(k) } catch (e) { reportError(e) /* keep it pending: reads see it and the next flush retries */ }
     }
   }
 

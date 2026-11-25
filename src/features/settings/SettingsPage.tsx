@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { daysSince, readBackupMeta } from '../../lib/backup'
 import { PaperPage, ScriptTitle } from '../../components/paper'
 import { useStore } from '../../store'
 import { STORAGE_KEY } from '../../store/defaults'
@@ -24,6 +25,7 @@ export function SettingsPage() {
   const data = useStore((st) => st.weeks)
   const file = useRef<HTMLInputElement>(null)
   const [bytes, setBytes] = useState(0)
+  const last = readBackupMeta().lastBackupAt
   useEffect(() => { const t = setTimeout(() => setBytes(usedBytes()), 400); return () => clearTimeout(t) })
 
   const onFile = async (f: File | undefined) => {
@@ -63,7 +65,8 @@ export function SettingsPage() {
 
       <section className={s.card}>
         <h2 className={s.h2}>Backup</h2>
-        <p className={s.note}>Everything lives in this browser only. Save a copy now and then.</p>
+        <p className={s.note}>Everything lives in this browser on this device only. Clearing browser data, switching phones or using a private window loses it. Save a copy now and then, and keep the file somewhere safe.</p>
+        <p className={s.note} role="status">{last ? `Last backup file created: ${daysSince(last) === 0 ? 'today' : `${daysSince(last)} days ago`}.` : 'No backup file created yet.'}</p>
         <div className={s.btns}>
           <button type="button" className={s.btn} onClick={download}>Export backup</button>
           <button type="button" className={s.btn} onClick={() => file.current?.click()}>Import backup</button>

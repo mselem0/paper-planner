@@ -22,3 +22,22 @@
 .links { display: flex; flex-wrap: wrap; gap: 10px; }
 .links a { color: #fff; text-decoration: none; font-family: var(--font-display); padding: 10px 18px; border-radius: 999px; text-shadow: 0 1px 1px rgba(0,0,0,.25); }
 .countdown { font-weight: 800; font-size: 14px; color: var(--ink-m); background: color-mix(in srgb, var(--accent) 22%, #fff); border-radius: 999px; padding: 6px 14px; margin: 4px 0 6px; }
+.nudge { display: flex; flex-direction: column; gap: 8px; border-color: var(--blue); }
+.nudge p { margin: 0; font-size: 14px; color: var(--ink); }
+.nudgeBtn { align-self: flex-start; border: 0; border-radius: 999px; padding: 9px 18px; background: var(--blue-deep); color: #fff; font-family: var(--font-display); }
+.ready ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.ready li { display: flex; gap: 10px; font-size: 15px; color: var(--ink); }
+.ready a { color: var(--blue-deep); font-weight: 800; }
+.readyDone { color: var(--ink-soft); text-decoration: line-through; }
+.habitAdd { display: flex; gap: 8px; margin-top: 8px; }
+.habitAdd input { flex: 1; min-width: 0; font: inherit; border: 0; border-bottom: 1.5px solid var(--line); background: transparent; padding: 6px 2px; color: var(--ink); }
+.habitAdd button, .carryBtn { border: 0; border-radius: 999px; padding: 6px 14px; background: var(--blue-deep); color: #fff; font-weight: 800; }
+.carry ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.carry li { display: flex; align-items: center; gap: 10px; justify-content: space-between; font-size: 15px; }
+.carry small { color: var(--ink-soft); display: block; }
+
+.readyToggle { display: flex; width: 100%; justify-content: space-between; align-items: center; border: 0; background: transparent; padding: 0; font-size: 13px; font-weight: 800; color: var(--blue-deep); min-height: 32px; }
+.readyToggle .h2 { margin: 0; }
+.ready ul { margin-top: 8px; }
+.moreBtn { border: 0; background: transparent; color: var(--blue-deep); font-weight: 800; text-decoration: underline; padding: 8px 0 0; }
+.carry { padding-bottom: 10px; }

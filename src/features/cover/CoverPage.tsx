@@ -53,7 +53,7 @@ export function CoverPage() {
           <p className={s.sub}>Write your name on the label to make this planner yours.</p>
         )}
         <button type="button" className={s.open} onClick={open}>Open my planner</button>
-        <span className={s.hint}>Saved on this device only</span>
+        <span className={s.hint}>Saved on this device only. Save a backup from Settings now and then.</span>
       </motion.div>
     </main>
   )

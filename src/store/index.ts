@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { addDays, type DayIndex, type ISODate, type Month } from '../lib/dates'
 import { uid } from '../lib/id'
+import { markBackup, markFirstEdit } from '../lib/backup'
 import {
   DATA_VERSION, STORAGE_KEY, createDefaultData, emptyBudget, emptyQuarter, emptyWeek, row,
 } from './defaults'
@@ -40,6 +41,7 @@ export interface Actions {
   removeTask: (week: ISODate, day: DayIndex, id: string) => void
   cycleTaskStatus: (week: ISODate, day: DayIndex, id: string) => void
   moveTaskToTomorrow: (week: ISODate, day: DayIndex, id: string) => void
+  carryTaskTo: (fromWeek: ISODate, fromDay: DayIndex, id: string, toWeek: ISODate, toDay: DayIndex) => void
   setHabitName: (week: ISODate, index: number, name: string) => void
   toggleHabit: (week: ISODate, index: number, day: number) => void
 
@@ -147,6 +149,12 @@ export const useStore = create<Store>()(
           patchTasks(week, day, (t) => t.filter((x) => x.id !== id))
           patchTasks(toWeek, toDay, (t) => [...t, { id: uid(), text: task.text, status: null }])
         },
+        carryTaskTo: (fromWeek, fromDay, id, toWeek, toDay) => {
+          const task = getWeek(get(), fromWeek).days[fromDay]?.find((x) => x.id === id)
+          if (!task) return
+          patchTasks(fromWeek, fromDay, (t) => t.filter((x) => x.id !== id))
+          patchTasks(toWeek, toDay, (t) => [...t, { id: uid(), text: task.text, status: null }])
+        },
         setHabitName: (week, index, name) =>
           set((s) => {
             // Copy-on-first-edit: a week without its own names starts from the inherited ones.
@@ -179,16 +187,24 @@ export const useStore = create<Store>()(
 
         exportJSON: () => JSON.stringify(dataOf(get()), null, 2),
         downloadExport: () => {
-          const blob = new Blob([get().exportJSON()], { type: 'application/json' })
-          const url = URL.createObjectURL(blob)
-          const a = document.createElement('a')
-          a.href = url
-          a.download = `rodaina-planner-${new Date().toISOString().slice(0, 10)}.json`
-          document.body.appendChild(a)
-          a.click()
-          a.remove()
-          setTimeout(() => URL.revokeObjectURL(url), 1000)
-          toast('Backup downloaded', 'success')
+          try {
+            const blob = new Blob([get().exportJSON()], { type: 'application/json' })
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = `rodaina-planner-${new Date().toISOString().slice(0, 10)}.json`
+            document.body.appendChild(a)
+            a.click()
+            a.remove()
+            setTimeout(() => URL.revokeObjectURL(url), 1000)
+          } catch (e) {
+            console.error('[planner] export failed', e)
+            toast('Could not create the backup file. Nothing was recorded as saved.', 'error')
+            return
+          }
+          // The browser cannot tell us whether the file really reached the device, so we only record that it was created.
+          markBackup()
+          toast('Backup file created. Check your Downloads or Files app to make sure it is there.', 'success')
         },
         importJSON: (text) => {
           try {
@@ -227,3 +243,9 @@ export const useStore = create<Store>()(
     },
   ),
 )
+
+/** First real edit starts the backup clock (reminders never nag an empty planner). */
+useStore.subscribe((s, prev) => {
+  if (s.profile !== prev.profile || s.weeks !== prev.weeks || s.notes !== prev.notes || s.budgets !== prev.budgets
+    || s.quarters !== prev.quarters || s.review !== prev.review || s.days !== prev.days || s.yearAgenda !== prev.yearAgenda) markFirstEdit()
+})

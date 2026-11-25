@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from 'react'
+import { useState, type CSSProperties, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { PaperPage, ScriptTitle } from '../../components/paper'
 import { budgetTotals, formatMoney } from '../../lib/budget'
@@ -7,6 +7,9 @@ import {
 } from '../../lib/dates'
 import { monthInfo } from '../../lib/months'
 import { habitCount } from '../../lib/week'
+import { findCarryover } from '../../lib/carryover'
+import { BackupNudge } from './BackupNudge'
+import { GetReady } from './GetReady'
 import { useStore } from '../../store'
 import { DayTasks } from '../week/DayTasks'
 import { HabitDot, useHabitToggle, useHabits } from '../week/HabitTracker'
@@ -34,6 +37,20 @@ export function TodayPage() {
   const setDayNote = useStore((st) => st.setDayNote)
   const habits = useHabits(week)
   const toggle = useHabitToggle(week)
+  const weeks = useStore((st) => st.weeks)
+  const carryTo = useStore((st) => st.carryTaskTo)
+  const setHabitName = useStore((st) => st.setHabitName)
+  const [newHabit, setNewHabit] = useState('')
+  const [allCarry, setAllCarry] = useState(false)
+  const carry = !outside ? findCarryover(weeks, date) : []
+  const addHabit = (e: FormEvent) => {
+    e.preventDefault()
+    const text = newHabit.trim()
+    const idx = habits.findIndex((h) => !h.name.trim())
+    if (!text || idx < 0) return
+    setHabitName(week, idx, text)
+    setNewHabit('')
+  }
   const totals = budget ? budgetTotals(budget) : { income: 0, expenses: 0, left: 0 }
   const named = habits.map((h, i) => ({ h, i })).filter((x) => x.h.name.trim())
 
@@ -56,6 +73,28 @@ export function TodayPage() {
           </label>
         </header>
 
+        <BackupNudge />
+        <GetReady />
+
+        {carry.length > 0 && (
+          <section className={`${s.card} ${s.carry}`} aria-label="Unfinished from earlier">
+            <h2 className={s.h2}>Unfinished from earlier</h2>
+            <ul>
+              {(allCarry ? carry : carry.slice(0, 2)).map((c) => (
+                <li key={c.task.id}>
+                  <span>{c.task.text}<small>{formatDayLong(c.date)} &middot; {c.task.status === 'stuck' ? 'stuck' : 'delayed'}</small></span>
+                  <button type="button" className={s.carryBtn} onClick={() => carryTo(c.week, c.day, c.task.id, week, day)} aria-label={`Bring "${c.task.text}" to today`}>Bring to today</button>
+                </li>
+              ))}
+            </ul>
+            {carry.length > 2 && (
+              <button type="button" className={s.moreBtn} onClick={() => setAllCarry((v) => !v)}>
+                {allCarry ? 'Show fewer' : `Show ${carry.length - 2} more`}
+              </button>
+            )}
+          </section>
+        )}
+
         <section className={s.card} aria-label="Today's tasks">
           <h2 className={s.h2}>Today&apos;s tasks</h2>
           <DayTasks week={week} day={day} minRows={4} label={`${WEEKDAY_SHORT[day]} tasks`} />
@@ -64,7 +103,7 @@ export function TodayPage() {
         <section className={s.card} aria-label="Today's habits">
           <h2 className={s.h2}>Habits</h2>
           {named.length === 0 ? (
-            <p className={s.empty}>Name your habits in <Link to={`/w/${week}`}>this week&apos;s planner</Link> to tick them off here.</p>
+            <p className={s.empty}>No habits yet. Add one below, or edit all of them in <Link to={`/w/${week}`}>this week&apos;s planner</Link>.</p>
           ) : (
             <ul className={s.habitList}>
               {named.map(({ h, i }) => (
@@ -75,6 +114,12 @@ export function TodayPage() {
                 </li>
               ))}
             </ul>
+          )}
+          {habits.some((h) => !h.name.trim()) && (
+            <form className={s.habitAdd} onSubmit={addHabit}>
+              <input value={newHabit} onChange={(e) => setNewHabit(e.target.value)} placeholder="add a habit, e.g. read 10 pages" aria-label="New habit name" maxLength={40} />
+              <button type="submit">Add</button>
+            </form>
           )}
         </section>
 

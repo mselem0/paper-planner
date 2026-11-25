@@ -124,3 +124,62 @@ describe('debounced storage', () => {
     expect(useToasts.getState().toasts.some((t) => t.kind === 'error')).toBe(true)
   })
 })
+
+describe('carryTaskTo', () => {
+  it('moves an unfinished task to another day, status reset', () => {
+    const s = useStore.getState()
+    const id = s.addTask('2027-01-03', 1, 'Pay rent')
+    s.updateTask('2027-01-03', 1, id, { status: 'delay' })
+    s.carryTaskTo('2027-01-03', 1, id, '2027-01-10', 2)
+    expect(getWeek(useStore.getState(), '2027-01-03').days[1]).toHaveLength(0)
+    const moved = getWeek(useStore.getState(), '2027-01-10').days[2]
+    expect(moved).toHaveLength(1)
+    expect(moved[0]).toMatchObject({ text: 'Pay rent', status: null })
+  })
+})
+
+describe('edge cases', () => {
+  it('carryTaskTo into a full day appends and never drops or overwrites', () => {
+    const s = useStore.getState()
+    for (let i = 0; i < 8; i++) s.addTask('2027-01-10', 2, `existing ${i}`)
+    const id = s.addTask('2027-01-03', 1, 'late')
+    s.carryTaskTo('2027-01-03', 1, id, '2027-01-10', 2)
+    const day = getWeek(useStore.getState(), '2027-01-10').days[2]
+    expect(day.map((t) => t.text)).toEqual([...Array.from({ length: 8 }, (_, i) => `existing ${i}`), 'late'])
+  })
+  it('double carry (double click) does not duplicate', () => {
+    const s = useStore.getState()
+    const id = s.addTask('2027-01-03', 1, 'once')
+    s.carryTaskTo('2027-01-03', 1, id, '2027-01-10', 2)
+    s.carryTaskTo('2027-01-03', 1, id, '2027-01-10', 2)
+    expect(getWeek(useStore.getState(), '2027-01-10').days[2].filter((t) => t.text === 'once')).toHaveLength(1)
+  })
+  it('malformed or wrong-shape imports leave existing data untouched', () => {
+    const s = useStore.getState()
+    s.setName('Rodaina'); s.addTask('2027-01-03', 1, 'keep me')
+    for (const bad of ['{nope', '{}', '[]', 'null', '"x"', '{"foo":1}', '{"version":99,"profile":{}}']) {
+      expect(useStore.getState().importJSON(bad).ok).toBe(false)
+    }
+    expect(useStore.getState().profile.name).toBe('Rodaina')
+    expect(getWeek(useStore.getState(), '2027-01-03').days[1][0].text).toBe('keep me')
+  })
+  it('failed export does not record a backup', async () => {
+    const { readBackupMeta } = await import('../lib/backup')
+    localStorage.removeItem('rodaina-planner:backup-meta')
+    const orig = URL.createObjectURL
+    URL.createObjectURL = () => { throw new Error('blocked') }
+    try { useStore.getState().downloadExport() } finally { URL.createObjectURL = orig }
+    expect(readBackupMeta().lastBackupAt).toBeNull()
+    expect(useToasts.getState().toasts.some((t) => t.kind === 'error')).toBe(true)
+  })
+  it('storage failure keeps the latest value readable and retries on the next flush', () => {
+    let fail = true; const mem = new Map<string, string>()
+    const backing = { getItem: (k: string) => mem.get(k) ?? null, setItem: (k: string, v: string) => { if (fail) throw new DOMException('full', 'QuotaExceededError'); mem.set(k, v) }, removeItem: () => {} } as unknown as Storage
+    const st = createDebouncedStorage(10_000, () => backing)
+    st.setItem('k', 'v1'); st.flush()
+    expect(st.getItem('k')).toBe('v1')
+    expect(useToasts.getState().toasts.some((t) => t.kind === 'error')).toBe(true)
+    fail = false; st.flush()
+    expect(mem.get('k')).toBe('v1')
+  })
+})

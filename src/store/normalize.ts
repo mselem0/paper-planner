@@ -38,6 +38,9 @@ function tasks(v: unknown): Task[] {
  */
 export function normalizeData(raw: unknown): AppData {
   if (!isObj(raw)) throw new Error('This file is not a planner backup.')
+  const known = ['profile', 'yearAgenda', 'quarters', 'days', 'budgets', 'weeks', 'notes', 'review']
+  // Valid JSON of the wrong shape (e.g. {} or another app's file) must never be read as "an empty planner".
+  if (!known.some((k) => k in raw)) throw new Error('This file is not a planner backup.')
   if (typeof raw.version === 'number' && raw.version > DATA_VERSION) {
     throw new Error('This backup was made by a newer version of the planner.')
   }
