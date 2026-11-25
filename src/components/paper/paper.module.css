@@ -6,30 +6,21 @@
   margin: 0 auto;
   min-height: 640px;
   padding: clamp(18px, 4vw, 44px);
-  background-color: transparent; /* the paper colour lives on ::before so the stacked-sheet ::after sits beneath it */
   border-radius: 6px 10px 10px 6px;
-  box-shadow: var(--shadow-page);
-  isolation: isolate;
-}
-.page.wide { max-width: 1040px; }
-/* paper grain */
-.page::before {
-  content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  /* paper colour + grain on the element itself, stacked sheet as a solid offset shadow.
+     (No negative z-index pseudo-elements: old iOS WebKit mis-composites them over content.) */
   background-color: var(--page-bg, var(--paper));
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .4  0 0 0 0 .2  0 0 0 .035 0'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+  box-shadow: var(--shadow-page), 5px 6px 0 0 var(--paper-edge), 5px 14px 20px -10px rgba(60, 50, 20, .35);
 }
-/* stacked sheets underneath */
-.page::after {
-  content: ''; position: absolute; inset: 6px -5px -6px 5px; z-index: -2; border-radius: 6px 10px 10px 6px;
-  background: var(--paper-edge); box-shadow: 0 8px 20px -10px rgba(60, 50, 20, .35);
-}
+.page.wide { max-width: 1040px; }
 /* spiral-ish binding dots on the left edge */
 .binding {
   position: absolute; left: -7px; top: 36px; bottom: 36px; width: 14px; pointer-events: none;
   background: radial-gradient(circle at 50% 50%, #cfcbb1 0 3.5px, transparent 4px) 0 0 / 14px 34px repeat-y;
   opacity: .8;
 }
-@media (max-width: 600px) { .binding { display: none; } .page::after { inset: 4px -3px -4px 3px; } }
+@media (max-width: 600px) { .binding { display: none; } .page { box-shadow: var(--shadow-page), 3px 4px 0 0 var(--paper-edge), 3px 12px 20px -10px rgba(60, 50, 20, .35); } }
 
 /* ---------- Ruled lines / LineInput / LineList ---------- */
 .ruled {

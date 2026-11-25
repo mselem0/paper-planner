@@ -28,5 +28,6 @@ h1, h2, h3, p { margin: 0; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
-html, body { overflow-x: clip; }
+/* Kept off html/body: overflow on the root has caused repaint bugs in older iOS Safari. */
+button, a, input, textarea, select, label { touch-action: manipulation; }
 button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
