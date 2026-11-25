@@ -1,6 +1,7 @@
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { Shell } from '../components/shell/Shell'
 import { Toaster } from '../components/shell/Toaster'
+import { InstallPrompt } from '../features/install/InstallPrompt'
 import { CoverPage } from '../features/cover/CoverPage'
 import { YearPage } from '../features/year/YearPage'
 import {
@@ -27,6 +28,7 @@ export function App() {
         </Route>
       </Routes>
       <Toaster />
+      <InstallPrompt />
     </HashRouter>
   )
 }
