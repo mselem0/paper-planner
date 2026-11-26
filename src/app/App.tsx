@@ -8,6 +8,7 @@ import { InstallPrompt } from '../features/install/InstallPrompt'
 import { PreviewExperience } from '../features/shop/PreviewExperience'
 import { CoverPage } from '../features/cover/CoverPage'
 import { YearPage } from '../features/year/YearPage'
+import { ScanPage } from '../features/scan/ScanPage'
 import {
   MonthRoute, NotFound, NoteRoute, NotesRoute, QuarterRoute, ReviewRoute, SettingsRoute, TodayRoute, WeekRoute,
 } from '../routes/placeholders'
@@ -29,6 +30,7 @@ export function App() {
           <Route path="/m/:month" element={<MonthRoute />} />
           <Route path="/m/:month/budget" element={<MonthRoute budget />} />
           <Route path="/w/:date" element={<WeekRoute />} />
+          <Route path="/scan" element={<ScanPage />} />
           <Route path="/notes" element={<NotesRoute />} />
           <Route path="/notes/:id" element={<NoteRoute />} />
           <Route path="/review" element={<ReviewRoute />} />

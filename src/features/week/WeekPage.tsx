@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { BigTitle, LineList, MonthDots, PaperPage } from '../../components/paper'
 import { celebrate } from '../../lib/confetti'
 import { WEEKDAY_SHORT, dayOf, todayISO, weekDates, weekMonth, type DayIndex, type ISODate } from '../../lib/dates'
@@ -65,7 +65,10 @@ export function WeekPage({ week }: { week: ISODate }) {
   const month = weekMonth(week)
   const info = monthInfo(month)
   const navigate = useNavigate()
-  const [tab, setTab] = useState<'matrix' | 'planner'>('matrix')
+  const location = useLocation()
+  const [tab, setTab] = useState<'matrix' | 'planner'>(
+    (location.state as { tab?: string } | null)?.tab === 'planner' ? 'planner' : 'matrix',
+  )
   const prev = shiftWeek(week, -1)
   const next = shiftWeek(week, 1)
   const allOk = useStore((st) => (st.weeks[week] ? weekAllOk(st.weeks[week]) : false))
@@ -89,6 +92,7 @@ export function WeekPage({ week }: { week: ISODate }) {
           <h1 className={s.title}>{weekRangeTitle(week)}</h1>
           <button type="button" className={s.arrow} disabled={!next} onClick={() => next && navigate(`/w/${next}`)} aria-label="Next week">&#8250;</button>
           <Link to={`/m/${month}`} className={s.monthLink} style={{ background: info.accent }}>{info.name} &rarr;</Link>
+          <Link to="/scan" className={s.scanLink}>Scan page</Link>
         </div>
         <div className={s.tabs} role="tablist" aria-label="Week view">
           {([['matrix', 'Priority matrix'], ['planner', 'Weekly planner']] as const).map(([k, l]) => (
