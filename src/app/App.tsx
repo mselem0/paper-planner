@@ -1,9 +1,11 @@
 import { lazy, Suspense } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
+import { OverlayCoordinator } from './OverlayCoordinator'
 import { Shell } from '../components/shell/Shell'
 import { Toaster } from '../components/shell/Toaster'
 import { StatsPinger } from '../features/stats/StatsPinger'
 import { InstallPrompt } from '../features/install/InstallPrompt'
+import { PreviewExperience } from '../features/shop/PreviewExperience'
 import { CoverPage } from '../features/cover/CoverPage'
 import { YearPage } from '../features/year/YearPage'
 import {
@@ -16,6 +18,7 @@ const ShopPage = lazy(() => import('../features/shop/ShopPage').then((m) => ({ d
 export function App() {
   return (
     <HashRouter>
+      <OverlayCoordinator>
       <Routes>
         <Route path="/" element={<CoverPage />} />
         <Route path="/shop" element={<Suspense fallback={null}><ShopPage /></Suspense>} />
@@ -35,7 +38,9 @@ export function App() {
       </Routes>
       <Toaster />
       <InstallPrompt />
+      <PreviewExperience />
       <StatsPinger />
+      </OverlayCoordinator>
     </HashRouter>
   )
 }

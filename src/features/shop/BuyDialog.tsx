@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type RefObject } from 'react'
+import { createPortal } from 'react-dom'
 import { ILLUSTRATIVE_LABEL, PAGES_ARE_ILLUSTRATIVE, THUMB_HEIGHT, THUMB_WIDTH, WHATSAPP_NUMBER, type ShopPageDef } from './config'
 import { WhatsAppIcon } from './icons'
 import { buildWhatsAppMessage } from './message'
@@ -35,9 +36,9 @@ export function BuyDialog({ page, onClose, returnFocusRef }: Props) {
     else if (!e.shiftKey && active === last) { e.preventDefault(); first.focus() }
   }
 
-  return (
+  return createPortal(
     <div className={s.backdrop} onClick={(e) => { if (e.target === e.currentTarget) onClose() }} onKeyDown={onKeyDown}>
-      <div ref={sheet} className={s.sheet} role="dialog" aria-modal="true" aria-labelledby={titleId} tabIndex={-1}>
+      <div ref={sheet} className={s.sheet} role="dialog" aria-modal="true" aria-labelledby={titleId} tabIndex={-1} data-buy-dialog>
         <button type="button" className={s.close} onClick={onClose} aria-label="إغلاق">&times;</button>
         <div className={s.sheetHead}>
           <img className={s.mini} src={page.thumb} alt="" width={THUMB_WIDTH} height={THUMB_HEIGHT} decoding="async" />
@@ -64,6 +65,6 @@ export function BuyDialog({ page, onClose, returnFocusRef }: Props) {
         {PAGES_ARE_ILLUSTRATIVE && <p className={`${s.sheetNote} ${s.sheetNoteWarn}`}>{ILLUSTRATIVE_LABEL}</p>}
         <p className={s.sheetNote}>السعر والشحن والتوفر بيتأكدوا في المحادثة</p>
       </div>
-    </div>
+    </div>, document.body
   )
 }
