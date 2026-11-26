@@ -18,41 +18,32 @@ const setup = () => {
   return user
 }
 const buy = () => screen.getByRole('button', { name: 'اطلب البلانر' })
-const label = () => screen.getByTestId('page-label')
 
 beforeEach(() => { cfg.number = '201234567890' })
 afterEach(() => { vi.restoreAllMocks() })
 
 describe('shop page', () => {
-  it('shows the cover first and the persistent illustrative label', () => {
+  it('shows the automatic scan story in order without manual page controls', () => {
     setup()
-    expect(label()).toHaveTextContent(PAGES[0].label)
+    const story = screen.getByRole('region', { name: 'تصور توضيحي لمسح صفحة البلانر' })
+    expect(Array.from(story.querySelectorAll('[data-page]')).map((page) => page.getAttribute('data-page')))
+      .toEqual(['cover', 'today', 'week', 'notes'])
+    expect(within(story).getByRole('button', { name: 'إعادة عرض التصور' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'الصفحة التالية' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'الصفحة السابقة' })).toBeNull()
+    expect(screen.queryByRole('tab')).toBeNull()
     expect(screen.getByTestId('illustrative-label')).toHaveTextContent(ILLUSTRATIVE_LABEL)
     expect(screen.getByText('Designed by : Rodaina')).toBeInTheDocument()
     expect(screen.getByText('Developed by Mohamed selem')).toBeInTheDocument()
     expect(document.querySelector('main')).toHaveAttribute('dir', 'rtl')
   })
 
-  it('every page image has width/height and only the cover is eager', () => {
+  it('the story images have their intrinsic dimensions', () => {
     setup()
     const imgs = Array.from(document.querySelectorAll<HTMLImageElement>('img[alt]:not([alt=""])'))
-    expect(imgs).toHaveLength(PAGES.length)
+    expect(imgs).toHaveLength(4)
+    expect(imgs.map((img) => img.getAttribute('alt'))).toEqual([PAGES[0].label, PAGES[1].label, PAGES[2].label, PAGES[7].label])
     imgs.forEach((img) => { expect(img).toHaveAttribute('width'); expect(img).toHaveAttribute('height') })
-    expect(imgs[0].getAttribute('loading')).toBe('eager')
-    imgs.slice(1).forEach((img) => expect(img.getAttribute('loading')).toBe('lazy'))
-  })
-
-  it('next / previous buttons and arrow keys change the page label', async () => {
-    const user = setup()
-    await user.click(screen.getByRole('button', { name: 'الصفحة التالية' }))
-    expect(label()).toHaveTextContent(PAGES[1].label)
-    await user.keyboard('{ArrowRight}')
-    expect(label()).toHaveTextContent(PAGES[2].label)
-    await user.keyboard('{ArrowLeft}')
-    expect(label()).toHaveTextContent(PAGES[1].label)
-    await user.click(screen.getByRole('button', { name: 'الصفحة السابقة' }))
-    expect(label()).toHaveTextContent(PAGES[0].label)
-    expect(screen.getByRole('button', { name: 'الصفحة السابقة' })).toBeDisabled()
   })
 })
 
@@ -81,7 +72,6 @@ describe('order sheet', () => {
 
   it('links to wa.me with the Arabic message for the page being viewed', async () => {
     const user = setup()
-    await user.click(screen.getByRole('button', { name: 'الصفحة التالية' }))
     await user.click(buy())
     await user.type(screen.getByLabelText('الاسم (اختياري)'), 'منى')
     await user.type(screen.getByLabelText('ملاحظة (اختياري)'), 'A&B')
@@ -94,7 +84,7 @@ describe('order sheet', () => {
     expect(text).toContain('2027 Planner')
     expect(text).toContain('الاسم: منى')
     expect(text).toContain('ملاحظة: A&B')
-    expect(text).toContain(`(كنت بشوف صفحة: ${PAGES[1].label})`)
+    expect(text).toContain(`(كنت بشوف صفحة: ${PAGES[0].label})`)
   })
 
   it('with no number it shows a notice and opens nothing', async () => {

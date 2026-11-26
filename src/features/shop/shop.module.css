@@ -5,10 +5,6 @@
   position: relative; min-height: 100vh; background: var(--paper); font-family: var(--font-body); color: var(--ink);
 }
 .route { position: relative; min-height: 100vh; min-height: 100dvh; padding: 10px 14px 0; overflow-x: clip; background: var(--paper); font-family: var(--font-body); color: var(--ink); }
-.storyToggle { border: 0; border-radius: 999px; padding: 9px 16px; background: var(--blue-tint); color: var(--blue-deep); font: 800 14px var(--font-body); }
-.previewModes { display: flex; justify-content: center; gap: 8px; }
-.previewModes button[aria-pressed='true'] { background: var(--blue-deep); color: #fff; }
-.bookView[hidden], .storyView[hidden] { display: none; }
 .shop.dialogPreview { min-height: 0; height: auto; position: static; background: transparent; --bh: max(210px, min(43vh, 430px, calc(100vh - 300px))); }
 .dialogPreview .content { padding: 0 4px 78px; gap: 2px; }
 .dialogPreview .bar { position: sticky; z-index: 4; bottom: -10px; margin-top: -76px; width: 100%; gap: 8px; padding: 8px 10px 10px; background: linear-gradient(rgba(254,254,246,0), var(--paper) 45%); pointer-events: auto; }
