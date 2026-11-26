@@ -1,17 +1,21 @@
-import { useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { MONTH_LINKS, QUARTER_LINKS } from './nav'
 import { IconMonths, IconMore, IconNotes, IconToday, IconYear } from './icons'
+import { useOverlayCoordinator } from '../../app/OverlayCoordinator'
 import s from './shell.module.css'
 
 type SheetKind = 'months' | 'more' | null
 
 export function BottomBar() {
   const [sheet, setSheet] = useState<SheetKind>(null)
+  const { setMoreOpen } = useOverlayCoordinator()
   const { pathname } = useLocation()
   const [lastPath, setLastPath] = useState(pathname)
   if (lastPath !== pathname) { setLastPath(pathname); if (sheet) setSheet(null) }
+  useLayoutEffect(() => { if (sheet === 'more') setMoreOpen(true) }, [sheet, setMoreOpen])
+  useEffect(() => () => setMoreOpen(false), [setMoreOpen])
   const onMonth = pathname.startsWith('/m/')
 
   return (
@@ -23,7 +27,7 @@ export function BottomBar() {
         <NavLink to="/notes" className={s.barBtn}><IconNotes />Notes</NavLink>
         <button type="button" className={s.barBtn} data-open={sheet === 'more'} aria-expanded={sheet === 'more'} onClick={() => setSheet(sheet === 'more' ? null : 'more')}><IconMore />More</button>
       </nav>
-      <AnimatePresence>
+      <AnimatePresence onExitComplete={() => { if (sheet !== 'more') setMoreOpen(false) }}>
         {sheet && (
           <>
             <motion.div key="scrim" className={s.scrim} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSheet(null)} />

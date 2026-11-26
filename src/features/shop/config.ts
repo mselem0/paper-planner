@@ -5,6 +5,9 @@ export const WHATSAPP_NUMBER: string = (import.meta.env.VITE_WHATSAPP_NUMBER ?? 
 
 export const PRODUCT_NAME = '2027 Planner'
 
+/** Number of days before a previously seen preview may be shown automatically again. */
+export const PREVIEW_REPEAT_DAYS = 0
+
 /**
  * The page images are screenshots of the app, not print art. While true, a persistent label says so under the preview and
  * in the order sheet. Only switch off once real print art is supplied and the owner confirms.

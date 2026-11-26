@@ -1,0 +1,29 @@
+.backdrop {
+  --bh: max(210px, min(43vh, 430px, calc(100vh - 300px)));
+  --bw: calc(var(--bh) * 780 / 1548);
+  position: fixed; z-index: 70; inset: 0; display: flex; align-items: center; justify-content: center;
+  padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  background: rgba(30, 35, 70, .68); overflow-y: auto;
+}
+@supports (height: 1dvh) { .backdrop { --bh: max(210px, min(43dvh, 430px, calc(100dvh - 300px))); } }
+.dialog {
+  position: relative; width: min(620px, 100%); max-height: 100%; overflow-y: auto; outline: none;
+  border-radius: 22px; background: var(--paper); box-shadow: 0 18px 56px rgba(20, 25, 60, .38);
+  padding: 34px 12px 12px;
+  animation: open .28s cubic-bezier(.22, 1, .36, 1) both;
+}
+@keyframes bookOpen { from { opacity: .65; transform: perspective(700px) rotateY(28deg) scale(.94); } to { opacity: 1; transform: perspective(700px) rotateY(0) scale(1); } }
+.close { position: sticky; z-index: 5; top: -32px; display: block; margin: -32px 0 -12px auto; width: 44px; height: 44px; border: 0; border-radius: 50%; background: var(--paper); color: var(--ink); font-size: 30px; line-height: 1; }
+@keyframes open { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: none; } }
+@media (max-width: 380px) {
+ .backdrop { padding-inline: 8px; }
+ .dialog { border-radius: 16px; padding: 32px 8px 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .dialog { animation: none; } }
+.fab {
+ position: fixed; z-index: 35; inset-inline-end: 16px; bottom: calc(var(--bar-h) + 12px + env(safe-area-inset-bottom));
+ border: 0; border-radius: 999px; padding: 11px 16px; background: var(--blue-deep); color: #fff;
+ box-shadow: 0 6px 18px rgba(30, 40, 90, .28); font: 800 14px var(--font-body);
+}
+@media (min-width: 900px) { .fab { bottom: 20px; inset-inline-start: calc(var(--rail-w) + 20px); inset-inline-end: auto; } }
+@media (max-width: 380px) { .fab { inset-inline-end: 10px; bottom: calc(var(--bar-h) + 8px + env(safe-area-inset-bottom)); padding: 9px 12px; font-size: 12px; } }
