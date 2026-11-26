@@ -1,14 +1,12 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import ScanStory from './ScanStory'
-import { PRODUCT_NAME } from './config'
 
 const scene = () => screen.getByLabelText('تصور توضيحي لمسح صفحة البلانر').querySelector('[class*="scene"]')!
 
 describe('ScanStory', () => {
   it('presents the planner notes and the illustrative scan limitation', () => {
     render(<ScanStory />)
-    expect(screen.getByText(PRODUCT_NAME)).toHaveAttribute('dir', 'ltr')
     expect(screen.getByText('تصور توضيحي لميزة الاسكان — قيد التطوير')).toBeInTheDocument()
     expect(screen.getAllByText('أفكار مشروع التخرج')[0]).toBeInTheDocument()
     expect(screen.getAllByText('ترتيب المراجع ومراجعة المقدمة')[0]).toBeInTheDocument()
@@ -26,7 +24,12 @@ describe('ScanStory', () => {
     expect(document.querySelector('[data-camera-preview="true"]')).toBeInTheDocument()
     expect(document.querySelector('[data-capture-flash="true"]')).toBeInTheDocument()
     expect(document.querySelector('[data-page="today"]')).toBeNull()
-    expect(screen.getByLabelText('تصور توضيحي للتطبيق')).toBeInTheDocument()
+    expect(screen.getByLabelText('تصور توضيحي لشاشة الملاحظات في التطبيق')).toBeInTheDocument()
+    expect(document.querySelector('[aria-label="Notes"]')).toBeInTheDocument()
+    expect(document.querySelector('[aria-current="page"]')?.textContent).toContain('Notes')
+    expect(document.querySelectorAll('[class*="demoCard"]')).toHaveLength(2)
+    expect(document.querySelector('[aria-label="Notes"]')?.closest('[aria-hidden="true"]')).toBeInTheDocument()
+    expect(document.querySelector('[class*="demoNew"]')?.textContent).toContain('New page')
     expect(screen.getByRole('button', { name: 'إعادة عرض التصور' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'الصفحة التالية' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'صفحة اليوم' })).toBeNull()

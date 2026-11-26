@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { PRODUCT_NAME } from './config'
+import { AgendaLogo, PaperPage, ScriptTitle } from '../../components/paper'
+import { IconMonths, IconMore, IconNotes, IconToday, IconYear } from '../../components/shell/icons'
+import notes from '../notes/notes.module.css'
+import shell from '../../components/shell/shell.module.css'
 import styles from './scan-story.module.css'
 
 type ScanStoryProps = { paused?: boolean }
@@ -62,9 +65,9 @@ export default function ScanStory({ paused = false }: ScanStoryProps) {
           <span className={styles.groundShadow} aria-hidden="true" />
         </div>
 
-        <div className={styles.phone} aria-label="تصور توضيحي للتطبيق">
+        <div className={styles.phone} role="img" aria-label="تصور توضيحي لشاشة الملاحظات في التطبيق">
           <span className={styles.phoneButton} aria-hidden="true" />
-          <div className={styles.phoneScreen}>
+          <div className={styles.phoneScreen} aria-hidden="true">
             <div className={styles.statusBar} dir="ltr"><span>9:41</span><span className={styles.statusMarks} aria-hidden="true"><i /><i /><i /></span></div>
             <div className={styles.island} aria-hidden="true"><i /></div>
             <div className={styles.camera} data-camera-preview="true" aria-hidden="true">
@@ -75,12 +78,36 @@ export default function ScanStory({ paused = false }: ScanStoryProps) {
               <span className={styles.shutter} />
             </div>
             <div className={styles.appView}>
-              <header className={styles.appHeader}>
-                <span className={styles.appName} dir="ltr">{PRODUCT_NAME}</span><b>ملاحظاتي</b><small>من صفحات البلانر</small>
-              </header>
-              <div className={styles.notes}>
-                <article className={`${styles.note} ${styles.noteOne}`}><span>أفكار مشروع التخرج</span><p>ترتيب المراجع ومراجعة المقدمة</p></article>
-                <article className={`${styles.note} ${styles.noteTwo}`}><span>تجهيز المسودة الأولى</span><p>إنهاء الفصل الأول قبل الخميس</p></article>
+              <div className={styles.appViewport} dir="ltr">
+                <main className={styles.appMain}>
+                  <PaperPage label="Notes" className={styles.demoPaper}>
+                    <div className={styles.demoTop}><AgendaLogo /></div>
+                    <h1 className={`${notes.h1} ${styles.demoTitle}`}>Notes</h1>
+                    <div className={`${notes.bar} ${styles.demoBar}`}>
+                      <ScriptTitle size="28px" rotate={-3}>my notebook</ScriptTitle>
+                      <span className={`${notes.new} ${styles.demoNew}`}>+ New page</span>
+                    </div>
+                    <ul className={`${notes.grid} ${styles.demoGrid}`}>
+                      <li><article className={`${notes.card} ${styles.demoCard} ${styles.demoCardOne}`}>
+                        <strong className={notes.cardTitle}>أفكار مشروع التخرج</strong>
+                        <span className={notes.snip}>ترتيب المراجع ومراجعة المقدمة</span>
+                        <span className={notes.date}>13 Jan 2027</span>
+                      </article></li>
+                      <li><article className={`${notes.card} ${styles.demoCard} ${styles.demoCardTwo}`}>
+                        <strong className={notes.cardTitle}>تجهيز المسودة الأولى</strong>
+                        <span className={notes.snip}>إنهاء الفصل الأول قبل الخميس</span>
+                        <span className={notes.date}>13 Jan 2027</span>
+                      </article></li>
+                    </ul>
+                  </PaperPage>
+                </main>
+                <nav className={`${shell.bar} ${styles.demoNav}`} aria-label="Planner sections">
+                  <span className={styles.demoNavButton}><IconToday />Today</span>
+                  <span className={styles.demoNavButton}><IconYear />Year</span>
+                  <span className={styles.demoNavButton}><IconMonths />Months</span>
+                  <span className={styles.demoNavButton} aria-current="page"><IconNotes />Notes</span>
+                  <span className={styles.demoNavButton}><IconMore />More</span>
+                </nav>
               </div>
             </div>
             <div className={styles.homeIndicator} aria-hidden="true" />
