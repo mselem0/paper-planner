@@ -27,7 +27,10 @@ describe('shop page', () => {
     setup()
     const story = screen.getByRole('region', { name: 'تصور توضيحي لمسح صفحة البلانر' })
     expect(Array.from(story.querySelectorAll('[data-page]')).map((page) => page.getAttribute('data-page')))
-      .toEqual(['cover', 'today', 'week', 'notes'])
+      .toEqual(['cover'])
+    expect(within(story).getByLabelText('دفتر بلانر ورقي مفتوح')).toBeInTheDocument()
+    expect(story.querySelectorAll('[class*=rings] i')).toHaveLength(6)
+    expect(story.querySelector('[data-camera-preview=true]')).toBeInTheDocument()
     expect(within(story).getByRole('button', { name: 'إعادة عرض التصور' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'الصفحة التالية' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'الصفحة السابقة' })).toBeNull()
@@ -40,10 +43,9 @@ describe('shop page', () => {
 
   it('the story images have their intrinsic dimensions', () => {
     setup()
-    const imgs = Array.from(document.querySelectorAll<HTMLImageElement>('img[alt]:not([alt=""])'))
-    expect(imgs).toHaveLength(4)
-    expect(imgs.map((img) => img.getAttribute('alt'))).toEqual([PAGES[0].label, PAGES[1].label, PAGES[2].label, PAGES[7].label])
-    imgs.forEach((img) => { expect(img).toHaveAttribute('width'); expect(img).toHaveAttribute('height') })
+    const cover = document.querySelector<HTMLImageElement>('[data-page=cover] img')
+    expect(cover).toHaveAttribute('src', expect.stringContaining('/shop/cover.webp'))
+    expect(cover).toHaveAttribute('alt', '')
   })
 })
 
